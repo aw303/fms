@@ -2,17 +2,17 @@
 
 This Docker setup supports the planned stack:
 
-- Laravel 12 / PHP 8.3 backend
+- FastAPI / Python 3.12 backend
 - Angular 19 frontend
 - MySQL by default, with optional PostgreSQL
-- Redis for cache, queues, and sessions
-- Nginx for the Laravel API
+- Redis for cache and background workers
+- Nginx as API gateway/reverse proxy
 
 ## Expected project structure
 
 ```text
 .
-├── backend/      # Laravel application
+├── backend/      # FastAPI application
 ├── frontend/     # Angular application
 └── docker-compose.yml
 ```
@@ -34,24 +34,24 @@ docker compose up --build
 Default URLs:
 
 - Angular frontend: http://localhost:4200
-- Laravel API via Nginx: http://localhost:8080
+- FastAPI via Nginx: http://localhost:8080
+- FastAPI health endpoint: http://localhost:8080/api/health
+- FastAPI docs: http://localhost:8080/docs
 - MySQL: localhost:3306
 - Redis: localhost:6379
 
-## Laravel setup
+## FastAPI setup
 
-After creating or placing the Laravel app in `backend/`, install dependencies and generate the app key:
+After creating or placing the FastAPI app in `backend/`, install dependencies:
 
 ```bash
-docker compose run --rm backend composer install
-docker compose run --rm backend php artisan key:generate
-docker compose run --rm backend php artisan migrate
+docker compose run --rm backend pip install -r requirements.txt
 ```
 
-Use these database values in `backend/.env`:
+Use these database values in your backend config:
 
 ```env
-DB_CONNECTION=mysql
+DB_DRIVER=mysql
 DB_HOST=mysql
 DB_PORT=3306
 DB_DATABASE=logistics
@@ -79,10 +79,10 @@ PostgreSQL is included behind a Compose profile:
 docker compose --profile postgres up -d postgres
 ```
 
-Then update Laravel:
+Then switch backend DB configuration:
 
 ```env
-DB_CONNECTION=pgsql
+DB_DRIVER=postgresql
 DB_HOST=postgres
 DB_PORT=5432
 DB_DATABASE=logistics

@@ -1,7 +1,7 @@
 
 # Logistics & Fleet Management System
 
-A modern Logistics & Fleet Management platform built with Laravel API and Angular Material.
+A modern Logistics & Fleet Management platform built with FastAPI and Angular Material.
 
 ## Features
 - Authentication & RBAC
@@ -17,11 +17,11 @@ A modern Logistics & Fleet Management platform built with Laravel API and Angula
 
 ## Technology Stack
 ### Backend
-- Laravel 12
-- PHP 8.3+
+- Python 3.12+
+- FastAPI
+- Uvicorn
+- SQLAlchemy
 - MySQL/PostgreSQL
-- Sanctum
-- Spatie Permission
 - Redis
 
 ### Frontend
@@ -31,7 +31,7 @@ A modern Logistics & Fleet Management platform built with Laravel API and Angula
 - ApexCharts
 
 ## Docker Development
-Docker support is included for the full local stack: Laravel/PHP, Angular, MySQL, PostgreSQL, Redis, and Nginx.
+Docker support is included for the full local stack: FastAPI/Python, Angular, MySQL, PostgreSQL, Redis, and Nginx.
 
 See [DOCKER_README.md](DOCKER_README.md) for setup and commands.
 
