@@ -1,80 +1,55 @@
-.reports-grid {
-  display: grid;
-  gap: 0.8rem;
-}
-
 .metric-cards {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
-.metric,
-.chart-card {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(17, 24, 37, 0.95), rgba(11, 16, 24, 0.92));
-  padding: 0.85rem;
+.metric {
+  display: grid;
+  gap: 0.45rem;
 }
 
-.name,
-.delta,
-.metric h3,
-.head h3,
-.head span {
-  margin: 0;
-}
-
-.name,
-.delta,
-.head span {
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.metric h3 {
-  margin-top: 0.35rem;
-  font-size: 1.45rem;
-}
-
-.delta {
-  margin-top: 0.3rem;
-}
-
-.head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.reports-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+  gap: 1rem;
+  align-items: start;
 }
 
 .bars {
-  margin-top: 0.9rem;
-  min-height: 220px;
+  min-height: 260px;
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.65rem;
   align-items: end;
+  margin-top: 1rem;
+  padding-top: 1rem;
 }
 
 .bar {
   height: var(--h);
-  border-radius: 10px 10px 6px 6px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  min-height: 44px;
   position: relative;
+  border-radius: 8px 8px 4px 4px;
+  background: linear-gradient(180deg, var(--accent-2), var(--accent));
 }
 
 .bar span {
   position: absolute;
-  bottom: -1.45rem;
+  bottom: -1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.72rem;
   color: var(--muted);
+  font-size: 0.74rem;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1080px) {
   .metric-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reports-layout {
+    grid-template-columns: 1fr;
   }
 }
 

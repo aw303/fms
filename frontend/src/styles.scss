@@ -1,19 +1,26 @@
 :root {
-  --bg: #eef3f8;
+  --bg: #f2f6fa;
   --surface: #ffffff;
-  --surface-2: #f7fafc;
+  --surface-2: #f8fbff;
   --panel: #ffffff;
-  --line: #d8e0ea;
-  --line-strong: #bfccd9;
-  --text: #15202e;
-  --muted: #66758a;
-  --muted-strong: #435066;
-  --accent: #087f6f;
-  --accent-2: #1b67b1;
-  --warning: #b7791f;
-  --danger: #c2414b;
-  --success: #18825f;
-  --shadow: 0 16px 34px rgba(28, 45, 66, 0.09);
+  --line: #dce6f1;
+  --line-strong: #b9c8d8;
+  --text: #172033;
+  --muted: #657386;
+  --muted-strong: #405168;
+  --accent: #006d77;
+  --accent-rgb: 0, 109, 119;
+  --accent-2: #2563eb;
+  --accent-2-rgb: 37, 99, 235;
+  --warning: #d97706;
+  --warning-rgb: 217, 119, 6;
+  --danger: #dc2626;
+  --danger-rgb: 220, 38, 38;
+  --success: #059669;
+  --success-rgb: 5, 150, 105;
+  --soft-track: #e8eef6;
+  --info-soft: #eaf2ff;
+  --shadow: 0 14px 30px rgba(23, 32, 51, 0.08);
 }
 
 * {
@@ -29,7 +36,7 @@ body {
 body {
   font-family: 'Aptos', 'Avenir Next', 'Segoe UI', sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 42%, #e8eef5 100%);
+  background: linear-gradient(180deg, #fbfdff 0%, var(--bg) 45%, #eaf1f8 100%);
   font-size: 15px;
 }
 
@@ -119,8 +126,8 @@ button {
 .status-chip.low,
 .status-chip.completed {
   color: var(--success);
-  border-color: rgba(24, 130, 95, 0.24);
-  background: rgba(24, 130, 95, 0.08);
+  border-color: rgba(var(--success-rgb), 0.24);
+  background: rgba(var(--success-rgb), 0.08);
 }
 
 .chip.warning,
@@ -132,8 +139,8 @@ button {
 .status-chip.scheduled,
 .status-chip.on-trip {
   color: var(--warning);
-  border-color: rgba(183, 121, 31, 0.25);
-  background: rgba(183, 121, 31, 0.09);
+  border-color: rgba(var(--warning-rgb), 0.25);
+  background: rgba(var(--warning-rgb), 0.09);
 }
 
 .chip.danger,
@@ -144,8 +151,8 @@ button {
 .status-chip.high,
 .status-chip.critical {
   color: var(--danger);
-  border-color: rgba(194, 65, 75, 0.25);
-  background: rgba(194, 65, 75, 0.08);
+  border-color: rgba(var(--danger-rgb), 0.25);
+  background: rgba(var(--danger-rgb), 0.08);
 }
 
 .status-chip.neutral,
@@ -217,7 +224,7 @@ button {
 }
 
 .primary-button {
-  border-color: #076f61;
+  border-color: var(--accent);
   background: var(--accent);
   color: white;
 }

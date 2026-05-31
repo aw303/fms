@@ -24,17 +24,17 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(8, 127, 111, 0.12), transparent 45%),
-    linear-gradient(315deg, rgba(27, 103, 177, 0.12), transparent 42%),
-    #f4f8fb;
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.12), transparent 45%),
+    linear-gradient(315deg, rgba(var(--accent-2-rgb), 0.12), transparent 42%),
+    var(--surface-2);
 }
 
 .grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(21, 32, 46, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(21, 32, 46, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(var(--accent-2-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-2-rgb), 0.07) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -55,7 +55,7 @@
   display: grid;
   place-items: center;
   border: 2px solid white;
-  box-shadow: 0 12px 22px rgba(28, 45, 66, 0.16);
+  box-shadow: 0 12px 22px rgba(23, 32, 51, 0.16);
   font-weight: 850;
 }
 
@@ -76,7 +76,7 @@
   width: 50px;
   height: 50px;
   border-radius: 8px;
-  background: #384860;
+  background: var(--muted-strong);
   color: white;
 }
 
@@ -111,7 +111,7 @@
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e6edf4;
+  background: var(--soft-track);
 }
 
 .bar-wrap span {

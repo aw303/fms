@@ -1,28 +1,65 @@
-<section class="reports-grid">
+<section class="page-stack">
   <article class="metric-cards">
     @for (metric of metrics; track metric.name) {
-      <div class="metric">
-        <p class="name">{{ metric.name }}</p>
-        <h3>{{ metric.value }}</h3>
-        <p class="delta">{{ metric.delta }} vs last week</p>
+      <div class="panel panel-pad metric">
+        <p class="metric-label">{{ metric.name }}</p>
+        <p class="metric-value">{{ metric.value }}</p>
+        <span class="status-chip" [ngClass]="metric.tone">{{ metric.delta }} vs last week</span>
       </div>
     }
   </article>
 
-  <article class="chart-card">
-    <div class="head">
-      <h3>Weekly Throughput</h3>
-      <span>Mon → Sun</span>
-    </div>
+  <section class="reports-layout">
+    <article class="panel panel-pad chart-card">
+      <div class="section-head">
+        <div>
+          <h3>Weekly Throughput</h3>
+          <p>Completed shipments by operating day.</p>
+        </div>
+        <button class="secondary-button" type="button">Download</button>
+      </div>
 
-    <div class="bars">
-      <div class="bar" style="--h:58%"><span>Mon</span></div>
-      <div class="bar" style="--h:72%"><span>Tue</span></div>
-      <div class="bar" style="--h:64%"><span>Wed</span></div>
-      <div class="bar" style="--h:81%"><span>Thu</span></div>
-      <div class="bar" style="--h:76%"><span>Fri</span></div>
-      <div class="bar" style="--h:52%"><span>Sat</span></div>
-      <div class="bar" style="--h:67%"><span>Sun</span></div>
-    </div>
-  </article>
+      <div class="bars">
+        <div class="bar" style="--h:58%"><span>Mon</span></div>
+        <div class="bar" style="--h:72%"><span>Tue</span></div>
+        <div class="bar" style="--h:64%"><span>Wed</span></div>
+        <div class="bar" style="--h:81%"><span>Thu</span></div>
+        <div class="bar" style="--h:76%"><span>Fri</span></div>
+        <div class="bar" style="--h:52%"><span>Sat</span></div>
+        <div class="bar" style="--h:67%"><span>Sun</span></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Lane Performance</h3>
+          <p>Shipment volume, SLA, and average cost.</p>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Lane</th>
+              <th>Shipments</th>
+              <th>SLA</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (lane of lanes; track lane.lane) {
+              <tr>
+                <td><strong>{{ lane.lane }}</strong></td>
+                <td>{{ lane.shipments }}</td>
+                <td>{{ lane.sla }}</td>
+                <td>{{ lane.cost }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
 </section>

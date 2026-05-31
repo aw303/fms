@@ -37,17 +37,17 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(8, 127, 111, 0.12), transparent 44%),
-    linear-gradient(315deg, rgba(27, 103, 177, 0.12), transparent 48%),
-    #f4f8fb;
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.12), transparent 44%),
+    linear-gradient(315deg, rgba(var(--accent-2-rgb), 0.12), transparent 48%),
+    var(--surface-2);
 }
 
 .map-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(21, 32, 46, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(21, 32, 46, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(var(--accent-2-rgb), 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-2-rgb), 0.07) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -72,14 +72,14 @@
   border-radius: 8px;
   background: var(--accent);
   color: white;
-  box-shadow: 0 12px 22px rgba(8, 127, 111, 0.22);
+  box-shadow: 0 12px 22px rgba(var(--accent-rgb), 0.22);
   font-size: 0.76rem;
   font-weight: 850;
 }
 
 .n1 { left: 17%; top: 22%; }
 .n2 { right: 19%; top: 30%; background: var(--accent-2); }
-.n3 { left: 36%; bottom: 24%; background: #384860; }
+.n3 { left: 36%; bottom: 24%; background: var(--muted-strong); }
 .n4 { right: 30%; bottom: 16%; background: var(--warning); }
 
 .watch-list,
@@ -143,7 +143,7 @@
   height: 9px;
   overflow: hidden;
   border-radius: 999px;
-  background: #e6edf4;
+  background: var(--soft-track);
 }
 
 .capacity-bar span {

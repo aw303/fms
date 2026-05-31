@@ -1,0 +1,41 @@
+<section class="page-stack">
+  <div class="settings-grid">
+    <article class="panel panel-pad">
+      <p class="metric-label">Users</p>
+      <p class="metric-value">38</p>
+      <p class="metric-note">12 admins and managers</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Automations</p>
+      <p class="metric-value">14</p>
+      <p class="metric-note">9 active alert rules</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">API Health</p>
+      <p class="metric-value">99.9%</p>
+      <p class="metric-note">Last 30 days</p>
+    </article>
+  </div>
+
+  <article class="panel">
+    <div class="section-head panel-pad">
+      <div>
+        <h3>Workspace Controls</h3>
+        <p>Access rules, integrations, and operating policies.</p>
+      </div>
+      <button class="primary-button" type="button">Invite User</button>
+    </div>
+
+    <div class="setting-list">
+      @for (item of settings; track item.name) {
+        <div class="setting-row">
+          <div>
+            <strong>{{ item.name }}</strong>
+            <small>{{ item.description }}</small>
+          </div>
+          <span class="status-chip" [ngClass]="statusClass(item.status)">{{ item.status }}</span>
+        </div>
+      }
+    </div>
+  </article>
+</section>

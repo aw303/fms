@@ -39,7 +39,7 @@ export class LiveTrackingPageComponent {
     { vehicle: 'TRK-219', message: 'ETA confidence improved after checkpoint scan.', severity: 'low' }
   ];
 
-  riskClass(risk: ActiveRoute['risk']): string {
+  riskClass(risk: ActiveRoute['risk'] | TrackingAlert['severity']): string {
     return risk.toLowerCase();
   }
 }
