@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface Driver {
   name: string;
@@ -40,7 +42,18 @@ export class DriversPageComponent {
     { label: 'Night', drivers: 22, coverage: 68 }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   statusClass(status: Driver['status']): string {
     return status.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  async onAddDriver(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction('add-driver', { source: 'drivers-directory' }));
+      window.alert(result.message);
+    } catch {
+      window.alert('Failed to run action.');
+    }
   }
 }

@@ -24,8 +24,8 @@
         <p>Planning pipeline from order intake to delivery execution.</p>
       </div>
       <div class="toolbar">
-        <button class="secondary-button" type="button">Import Orders</button>
-        <button class="primary-button" type="button">Create Dispatch</button>
+        <button class="secondary-button" type="button" (click)="onImportOrders()">Import Orders</button>
+        <button class="primary-button" type="button" (click)="onCreateDispatch()">Create Dispatch</button>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
         <h3>Today&apos;s Dispatches</h3>
         <p>Operational schedule with assigned vehicle and planner.</p>
       </div>
-      <button class="secondary-button" type="button">Filter</button>
+      <button class="secondary-button" type="button" (click)="onFilter()">Filter</button>
     </div>
 
     <div class="table-scroll">

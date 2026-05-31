@@ -55,9 +55,9 @@
           <span>Search</span>
           <input type="search" placeholder="Trip, driver, invoice..." />
         </label>
-        <button class="secondary-button" type="button">Export</button>
-        <button class="primary-button" type="button">New Dispatch</button>
-        <button class="avatar-button" type="button" aria-label="Open account menu">AW</button>
+        <button class="secondary-button" type="button" (click)="onExport()" [disabled]="!can('report:export')">Export</button>
+        <button class="primary-button" type="button" (click)="onNewDispatch()" [disabled]="!can('dispatch:create')">New Dispatch</button>
+        <button class="avatar-button" type="button" aria-label="Open account menu" (click)="onOpenAccountMenu()" [disabled]="!can('action:log')">AW</button>
       </div>
     </header>
 

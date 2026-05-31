@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { CustomerRisk, FleetApiService } from '../../services/fleet-api.service';
 
 interface CustomerAccount {
   name: string;
@@ -8,7 +10,7 @@ interface CustomerAccount {
   monthlySpend: string;
   sla: string;
   owner: string;
-  status: 'Low' | 'Medium' | 'High';
+  status: CustomerRisk;
 }
 
 @Component({
@@ -17,15 +19,65 @@ interface CustomerAccount {
   templateUrl: './customers-page.component.html',
   styleUrl: './customers-page.component.scss'
 })
-export class CustomersPageComponent {
-  readonly customers: CustomerAccount[] = [
-    { name: 'Orbit Pharma', tier: 'Enterprise', lanes: 18, monthlySpend: '$92.4K', sla: '98.5%', owner: 'Nadia', status: 'High' },
-    { name: 'Nexus Retail', tier: 'Growth', lanes: 12, monthlySpend: '$48.8K', sla: '96.1%', owner: 'Faraz', status: 'Low' },
-    { name: 'Delta Foods', tier: 'Enterprise', lanes: 15, monthlySpend: '$63.2K', sla: '94.8%', owner: 'Mariam', status: 'Medium' },
-    { name: 'Metro Mart', tier: 'Standard', lanes: 9, monthlySpend: '$24.6K', sla: '95.7%', owner: 'Bilal', status: 'Low' }
-  ];
+export class CustomersPageComponent implements OnInit {
+  customers: CustomerAccount[] = [];
+
+  constructor(private readonly api: FleetApiService) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.loadCustomers();
+  }
 
   riskClass(status: CustomerAccount['status']): string {
     return status.toLowerCase();
+  }
+
+  async onAddCustomer(): Promise<void> {
+    const name = window.prompt('Customer name', 'Acme Logistics');
+    if (!name) {
+      return;
+    }
+
+    const tier = window.prompt('Tier (Enterprise/Growth/Standard)', 'Standard');
+    if (!tier) {
+      return;
+    }
+
+    const owner = window.prompt('Account owner', 'Nadia');
+    if (!owner) {
+      return;
+    }
+
+    const lanes = Number(window.prompt('Contracted lanes', '8') ?? '0');
+    const monthlySpend = Number(window.prompt('Monthly spend in USD', '24000') ?? '0');
+    const sla = Number(window.prompt('SLA %', '95.5') ?? '95');
+    const riskInput = (window.prompt('Risk (Low/Medium/High)', 'Low') ?? 'Low').toLowerCase();
+
+    const risk: CustomerRisk = riskInput === 'high' ? 'High' : riskInput === 'medium' ? 'Medium' : 'Low';
+
+    try {
+      await firstValueFrom(this.api.createCustomer({ name, tier, owner, lanes, monthly_spend: monthlySpend, sla, risk }));
+      await this.loadCustomers();
+      window.alert('Customer added successfully.');
+    } catch {
+      window.alert('Failed to add customer. Name might already exist.');
+    }
+  }
+
+  private async loadCustomers(): Promise<void> {
+    try {
+      const data = await firstValueFrom(this.api.listCustomers());
+      this.customers = data.map((item) => ({
+        name: item.name,
+        tier: item.tier,
+        lanes: item.lanes,
+        monthlySpend: `$${(item.monthly_spend / 1000).toFixed(1)}K`,
+        sla: `${item.sla.toFixed(1)}%`,
+        owner: item.owner,
+        status: item.risk,
+      }));
+    } catch {
+      window.alert('Failed to load customers from backend.');
+    }
   }
 }

@@ -25,9 +25,9 @@
           <p>Route state, position, and exception density.</p>
         </div>
         <div class="map-actions">
-          <button class="secondary-button" type="button">Traffic</button>
-          <button class="secondary-button" type="button">Weather</button>
-          <button class="secondary-button" type="button">Hubs</button>
+          <button class="secondary-button" type="button" (click)="onMapLayer('traffic')">Traffic</button>
+          <button class="secondary-button" type="button" (click)="onMapLayer('weather')">Weather</button>
+          <button class="secondary-button" type="button" (click)="onMapLayer('hubs')">Hubs</button>
         </div>
       </div>
 
@@ -69,7 +69,7 @@
         <h3>Active Routes</h3>
         <p>Operational trip view for dispatch coordinators.</p>
       </div>
-      <button class="primary-button" type="button">Optimize Routes</button>
+      <button class="primary-button" type="button" (click)="onOptimizeRoutes()">Optimize Routes</button>
     </div>
 
     <div class="table-scroll">

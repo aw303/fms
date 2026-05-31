@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { DispatchStatus, FleetApiService } from '../../services/fleet-api.service';
 
 interface DispatchOrder {
   id: string;
@@ -9,7 +11,7 @@ interface DispatchOrder {
   vehicle: string;
   planner: string;
   window: string;
-  status: 'Scheduled' | 'Loading' | 'Delayed' | 'Completed';
+  status: DispatchStatus;
 }
 
 interface BoardLane {
@@ -24,22 +26,123 @@ interface BoardLane {
   templateUrl: './dispatches-page.component.html',
   styleUrl: './dispatches-page.component.scss'
 })
-export class DispatchesPageComponent {
-  readonly orders: DispatchOrder[] = [
-    { id: 'DSP-4182', customer: 'Orbit Pharma', pickup: 'Karachi Port', dropoff: 'Multan Yard', vehicle: 'TRK-118', planner: 'Imran', window: '13:00 - 16:00', status: 'Delayed' },
-    { id: 'DSP-4179', customer: 'Nexus Retail', pickup: 'Lahore Hub', dropoff: 'Islamabad DC', vehicle: 'TRK-219', planner: 'Sana', window: '12:30 - 15:30', status: 'Loading' },
-    { id: 'DSP-4176', customer: 'Metro Mart', pickup: 'Faisalabad Node', dropoff: 'City Core', vehicle: 'VAN-302', planner: 'Adeel', window: '15:00 - 17:30', status: 'Scheduled' },
-    { id: 'DSP-4171', customer: 'Delta Foods', pickup: 'Cold Store 04', dropoff: 'North Hub', vehicle: 'TRK-221', planner: 'Hira', window: '10:00 - 14:00', status: 'Completed' }
+export class DispatchesPageComponent implements OnInit {
+  orders: DispatchOrder[] = [];
+
+  lanes: BoardLane[] = [
+    { title: 'Unassigned', count: 0, orders: [] },
+    { title: 'Planned', count: 0, orders: [] },
+    { title: 'In Transit', count: 0, orders: [] },
+    { title: 'Exceptions', count: 0, orders: [] }
   ];
 
-  readonly lanes: BoardLane[] = [
-    { title: 'Unassigned', count: 8, orders: ['Retail replenishment', 'Spare parts', 'Vendor returns'] },
-    { title: 'Planned', count: 21, orders: ['Cold chain route', 'Airport belt run', 'North hub shuttle'] },
-    { title: 'In Transit', count: 67, orders: ['Port to yard', 'City core express', 'Pharma priority'] },
-    { title: 'Exceptions', count: 4, orders: ['Missing POD', 'Late pickup', 'Temp probe offline'] }
-  ];
+  constructor(private readonly api: FleetApiService) {}
+
+  async ngOnInit(): Promise<void> {
+    await this.loadDispatches();
+  }
 
   statusClass(status: DispatchOrder['status']): string {
     return status.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  async onImportOrders(): Promise<void> {
+    await this.runAction('import-orders', { source: 'dispatch-board' });
+  }
+
+  async onCreateDispatch(): Promise<void> {
+    const customer = window.prompt('Customer name', 'Orbit Pharma');
+    if (!customer) {
+      return;
+    }
+
+    const pickup = window.prompt('Pickup location', 'Karachi Port');
+    if (!pickup) {
+      return;
+    }
+
+    const dropoff = window.prompt('Dropoff location', 'Multan Yard');
+    if (!dropoff) {
+      return;
+    }
+
+    const vehicle = window.prompt('Vehicle', 'TRK-118');
+    if (!vehicle) {
+      return;
+    }
+
+    const planner = window.prompt('Planner', 'Imran');
+    if (!planner) {
+      return;
+    }
+
+    const windowLabel = window.prompt('Delivery window', '13:00 - 16:00');
+    if (!windowLabel) {
+      return;
+    }
+
+    try {
+      const result = await firstValueFrom(
+        this.api.createDispatch({
+          customer,
+          pickup,
+          dropoff,
+          vehicle,
+          planner,
+          window: windowLabel,
+          status: 'Scheduled',
+        }),
+      );
+
+      await this.loadDispatches();
+      window.alert(`Dispatch ${result.code} created successfully.`);
+    } catch {
+      window.alert('Could not create dispatch.');
+    }
+  }
+
+  async onFilter(): Promise<void> {
+    await this.runAction('dispatch-filter', { mode: 'today' });
+  }
+
+  private async loadDispatches(): Promise<void> {
+    try {
+      const data = await firstValueFrom(this.api.listDispatches());
+      this.orders = data.map((item) => ({
+        id: item.code,
+        customer: item.customer,
+        pickup: item.pickup,
+        dropoff: item.dropoff,
+        vehicle: item.vehicle,
+        planner: item.planner,
+        window: item.window,
+        status: item.status,
+      }));
+      this.updateBoardLanes();
+    } catch {
+      window.alert('Failed to load dispatches from backend.');
+    }
+  }
+
+  private async runAction(action: string, payload: Record<string, unknown>): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction(action, payload));
+      window.alert(result.message);
+    } catch {
+      window.alert('Action failed.');
+    }
+  }
+
+  private updateBoardLanes(): void {
+    const planned = this.orders.filter((item) => item.status === 'Scheduled');
+    const loading = this.orders.filter((item) => item.status === 'Loading');
+    const delayed = this.orders.filter((item) => item.status === 'Delayed');
+
+    this.lanes = [
+      { title: 'Unassigned', count: planned.length, orders: planned.slice(0, 3).map((item) => item.customer) },
+      { title: 'Planned', count: planned.length + loading.length, orders: [...planned, ...loading].slice(0, 3).map((item) => item.customer) },
+      { title: 'In Transit', count: loading.length, orders: loading.slice(0, 3).map((item) => item.customer) },
+      { title: 'Exceptions', count: delayed.length, orders: delayed.slice(0, 3).map((item) => item.customer) },
+    ];
   }
 }

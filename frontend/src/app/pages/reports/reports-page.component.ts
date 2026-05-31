@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface ReportMetric {
   name: string;
@@ -35,4 +37,21 @@ export class ReportsPageComponent {
     { lane: 'Peshawar to Faisalabad', shipments: 186, sla: '95.4%', cost: '$24.70' },
     { lane: 'City Core Express', shipments: 402, sla: '98.2%', cost: '$12.10' }
   ];
+
+  constructor(private readonly api: FleetApiService) {}
+
+  async onDownload(): Promise<void> {
+    try {
+      const blob = await firstValueFrom(this.api.export('all'));
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `fleet-report-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+      window.alert('Report downloaded successfully.');
+    } catch {
+      window.alert('Failed to download report.');
+    }
+  }
 }

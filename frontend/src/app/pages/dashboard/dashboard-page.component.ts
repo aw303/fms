@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface KpiCard {
   label: string;
@@ -78,6 +80,8 @@ export class DashboardPageComponent {
     { title: 'SLA recovery complete', detail: 'Three delayed stops returned inside delivery window.', severity: 'success' }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   statusClass(state: DriverStatus['state']): string {
     return state.toLowerCase().replace(/\s+/g, '-');
   }
@@ -88,5 +92,22 @@ export class DashboardPageComponent {
 
   capacityPercent(item: HubCapacity): number {
     return Math.round((item.docked / item.capacity) * 100);
+  }
+
+  async onAssign(): Promise<void> {
+    await this.runAction('assign-driver', { source: 'dashboard-watchlist' });
+  }
+
+  async onPlanLoads(): Promise<void> {
+    await this.runAction('plan-loads', { source: 'dashboard-queue' });
+  }
+
+  private async runAction(action: string, payload: Record<string, unknown>): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction(action, payload));
+      window.alert(result.message);
+    } catch {
+      window.alert('Action failed.');
+    }
   }
 }

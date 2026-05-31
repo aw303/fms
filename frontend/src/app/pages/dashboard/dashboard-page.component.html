@@ -40,7 +40,7 @@
           <h3>Driver Watchlist</h3>
           <p>Crews nearest to SLA risk.</p>
         </div>
-        <button class="secondary-button" type="button">Assign</button>
+        <button class="secondary-button" type="button" (click)="onAssign()">Assign</button>
       </div>
 
       <div class="watch-list">
@@ -67,7 +67,7 @@
           <h3>Dispatch Queue</h3>
           <p>Priority loads waiting on planning or approval.</p>
         </div>
-        <button class="primary-button" type="button">Plan Loads</button>
+        <button class="primary-button" type="button" (click)="onPlanLoads()">Plan Loads</button>
       </div>
 
       <div class="table-scroll">

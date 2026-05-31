@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface SettingRow {
   name: string;
@@ -21,6 +23,8 @@ export class SettingsPageComponent {
     { name: 'Customer portal', description: 'Expose shipment tracking and proof of delivery.', status: 'Disabled' }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   statusClass(status: SettingRow['status']): string {
     const map: Record<SettingRow['status'], string> = {
       Enabled: 'success',
@@ -29,5 +33,14 @@ export class SettingsPageComponent {
     };
 
     return map[status];
+  }
+
+  async onInviteUser(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction('invite-user', { source: 'workspace-settings' }));
+      window.alert(result.message);
+    } catch {
+      window.alert('Failed to run action.');
+    }
   }
 }

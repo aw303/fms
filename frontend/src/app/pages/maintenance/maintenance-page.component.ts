@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface WorkOrder {
   id: string;
@@ -25,7 +27,18 @@ export class MaintenancePageComponent {
     { id: 'WO-7734', vehicle: 'VAN-302', issue: 'Oil service', bay: 'Bay 3', due: 'May 30', cost: '$120', status: 'Completed' }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   statusClass(status: WorkOrder['status']): string {
     return status.toLowerCase();
+  }
+
+  async onCreateWorkOrder(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction('create-work-order', { source: 'maintenance-work-orders' }));
+      window.alert(result.message);
+    } catch {
+      window.alert('Failed to run action.');
+    }
   }
 }

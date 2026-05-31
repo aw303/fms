@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface Vehicle {
   id: string;
@@ -28,7 +30,18 @@ export class VehiclesPageComponent {
     { id: 'TRK-221', type: 'Reefer', mileage: '9,408 km', fuel: '64%', health: 'Good', hub: 'Cold Store 04', odometer: '98,408 km', nextService: 'Jun 24', utilization: 79 }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   healthClass(health: Vehicle['health']): string {
     return health.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  async onAddVehicle(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction('add-vehicle', { source: 'vehicle-registry' }));
+      window.alert(result.message);
+    } catch {
+      window.alert('Failed to run action.');
+    }
   }
 }

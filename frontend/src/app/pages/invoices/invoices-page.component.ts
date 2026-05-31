@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { FleetApiService } from '../../services/fleet-api.service';
 
 interface Invoice {
   ref: string;
@@ -25,7 +27,26 @@ export class InvoicesPageComponent {
     { ref: 'INV-8917', client: 'Metro Mart', amount: '$6,330', due: 'Jun 05', status: 'Pending', trips: 9, owner: 'Bilal' }
   ];
 
+  constructor(private readonly api: FleetApiService) {}
+
   statusClass(status: Invoice['status']): string {
     return status.toLowerCase();
+  }
+
+  async onSyncFinance(): Promise<void> {
+    await this.runAction('sync-finance', { source: 'invoices-page' });
+  }
+
+  async onCreateInvoice(): Promise<void> {
+    await this.runAction('create-invoice', { source: 'invoices-page' });
+  }
+
+  private async runAction(action: string, payload: Record<string, unknown>): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.logAction(action, payload));
+      window.alert(result.message);
+    } catch {
+      window.alert('Failed to run action.');
+    }
   }
 }
