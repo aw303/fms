@@ -46,6 +46,52 @@
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 22, 0.65);
+  z-index: 30;
+}
+
+.modal-shell {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  z-index: 31;
+}
+
+.modal-card {
+  width: min(560px, 100%);
+}
+
+.modal-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.modal-form label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.modal-form input,
+.modal-form select {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 9px;
+  padding: 0.62rem 0.72rem;
+  color: inherit;
+}
+
+.modal-actions {
+  margin-top: 0.3rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
 @media (max-width: 1100px) {
   .stat-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));

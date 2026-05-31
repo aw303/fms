@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { FleetApiService } from './services/fleet-api.service';
@@ -17,7 +17,7 @@ interface NavItem {
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   readonly navItems: NavItem[] = [
     { label: 'Overview', path: '/overview', hint: 'Command center', icon: 'OV' },
     { label: 'Live Tracking', path: '/live-tracking', hint: 'Realtime map', icon: 'LT' },
@@ -35,14 +35,6 @@ export class AppComponent implements OnInit {
     private readonly router: Router,
     private readonly api: FleetApiService,
   ) {}
-
-  async ngOnInit(): Promise<void> {
-    try {
-      await firstValueFrom(this.api.ensureDemoSession());
-    } catch {
-      window.alert('Authentication failed. Please verify backend auth is available.');
-    }
-  }
 
   get pageHeading(): string {
     const path = this.currentPath;
@@ -85,6 +77,10 @@ export class AppComponent implements OnInit {
     return path === 'dashboard' ? 'overview' : path;
   }
 
+  get isLoginRoute(): boolean {
+    return this.currentPath === 'login';
+  }
+
   async onExport(): Promise<void> {
     const scope = this.exportScope;
 
@@ -99,7 +95,9 @@ export class AppComponent implements OnInit {
 
       window.alert('Export completed successfully.');
     } catch {
-      window.alert('Export failed. Please verify the backend is running.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Export failed. Please verify the backend is running.');
+      }
     }
   }
 
@@ -150,17 +148,14 @@ export class AppComponent implements OnInit {
       await this.router.navigateByUrl('/dispatches');
       window.alert(`Dispatch ${result.code} created.`);
     } catch {
-      window.alert('Failed to create dispatch. Please try again.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to create dispatch. Please try again.');
+      }
     }
   }
 
-  async onOpenAccountMenu(): Promise<void> {
-    try {
-      await firstValueFrom(this.api.logAction('open-account-menu', { page: this.currentPath }));
-      window.alert('Account menu action logged.');
-    } catch {
-      window.alert('Unable to log account action.');
-    }
+  async onLogout(): Promise<void> {
+    this.api.logout();
   }
 
   private get exportScope(): 'all' | 'dispatches' | 'customers' | 'actions' {

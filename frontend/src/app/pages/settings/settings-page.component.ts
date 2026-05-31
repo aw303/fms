@@ -40,7 +40,9 @@ export class SettingsPageComponent {
       const result = await firstValueFrom(this.api.logAction('invite-user', { source: 'workspace-settings' }));
       window.alert(result.message);
     } catch {
-      window.alert('Failed to run action.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to run action.');
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { CustomerRisk, FleetApiService } from '../../services/fleet-api.service';
 
@@ -13,14 +14,36 @@ interface CustomerAccount {
   status: CustomerRisk;
 }
 
+interface CustomerFormModel {
+  name: string;
+  tier: string;
+  lanes: number;
+  monthlySpend: number;
+  sla: number;
+  owner: string;
+  risk: CustomerRisk;
+}
+
 @Component({
   selector: 'app-customers-page',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './customers-page.component.html',
   styleUrl: './customers-page.component.scss'
 })
 export class CustomersPageComponent implements OnInit {
   customers: CustomerAccount[] = [];
+  isAddCustomerModalOpen = false;
+  isSubmitting = false;
+
+  customerForm: CustomerFormModel = {
+    name: '',
+    tier: 'Standard',
+    lanes: 1,
+    monthlySpend: 10000,
+    sla: 95,
+    owner: '',
+    risk: 'Low',
+  };
 
   constructor(private readonly api: FleetApiService) {}
 
@@ -32,35 +55,52 @@ export class CustomersPageComponent implements OnInit {
     return status.toLowerCase();
   }
 
-  async onAddCustomer(): Promise<void> {
-    const name = window.prompt('Customer name', 'Acme Logistics');
-    if (!name) {
+  onAddCustomer(): void {
+    this.customerForm = {
+      name: '',
+      tier: 'Standard',
+      lanes: 1,
+      monthlySpend: 10000,
+      sla: 95,
+      owner: '',
+      risk: 'Low',
+    };
+    this.isAddCustomerModalOpen = true;
+  }
+
+  onCloseAddCustomerModal(): void {
+    this.isAddCustomerModalOpen = false;
+    this.isSubmitting = false;
+  }
+
+  async onSubmitAddCustomer(): Promise<void> {
+    if (!this.customerForm.name.trim() || !this.customerForm.owner.trim()) {
+      window.alert('Customer name and owner are required.');
       return;
     }
 
-    const tier = window.prompt('Tier (Enterprise/Growth/Standard)', 'Standard');
-    if (!tier) {
-      return;
-    }
-
-    const owner = window.prompt('Account owner', 'Nadia');
-    if (!owner) {
-      return;
-    }
-
-    const lanes = Number(window.prompt('Contracted lanes', '8') ?? '0');
-    const monthlySpend = Number(window.prompt('Monthly spend in USD', '24000') ?? '0');
-    const sla = Number(window.prompt('SLA %', '95.5') ?? '95');
-    const riskInput = (window.prompt('Risk (Low/Medium/High)', 'Low') ?? 'Low').toLowerCase();
-
-    const risk: CustomerRisk = riskInput === 'high' ? 'High' : riskInput === 'medium' ? 'Medium' : 'Low';
+    this.isSubmitting = true;
 
     try {
-      await firstValueFrom(this.api.createCustomer({ name, tier, owner, lanes, monthly_spend: monthlySpend, sla, risk }));
+      await firstValueFrom(
+        this.api.createCustomer({
+          name: this.customerForm.name.trim(),
+          tier: this.customerForm.tier,
+          owner: this.customerForm.owner.trim(),
+          lanes: Math.max(0, this.customerForm.lanes),
+          monthly_spend: Math.max(0, this.customerForm.monthlySpend),
+          sla: Math.max(0, Math.min(100, this.customerForm.sla)),
+          risk: this.customerForm.risk,
+        }),
+      );
       await this.loadCustomers();
+      this.onCloseAddCustomerModal();
       window.alert('Customer added successfully.');
     } catch {
-      window.alert('Failed to add customer. Name might already exist.');
+      this.isSubmitting = false;
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to add customer. Name might already exist or you may not have permission.');
+      }
     }
   }
 
@@ -77,7 +117,9 @@ export class CustomersPageComponent implements OnInit {
         status: item.risk,
       }));
     } catch {
-      window.alert('Failed to load customers from backend.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to load customers from backend.');
+      }
     }
   }
 }

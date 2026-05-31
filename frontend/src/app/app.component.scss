@@ -87,6 +87,36 @@
   color: var(--muted);
 }
 
+.logout-cta {
+  width: 100%;
+  border: 1px solid rgba(220, 62, 62, 0.38);
+  background: rgba(220, 62, 62, 0.12);
+  color: #8e1f1f;
+  border-radius: 8px;
+  padding: 0.58rem 0.7rem;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.logout-cta:hover {
+  background: rgba(220, 62, 62, 0.2);
+}
+
+.logout-topbar {
+  border: 1px solid rgba(220, 62, 62, 0.4);
+  background: rgba(220, 62, 62, 0.12);
+  color: #8e1f1f;
+  border-radius: 8px;
+  height: 38px;
+  padding: 0 0.9rem;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.logout-topbar:hover {
+  background: rgba(220, 62, 62, 0.2);
+}
+
 .menu {
   display: grid;
   gap: 0.25rem;

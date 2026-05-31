@@ -92,3 +92,59 @@
     </article>
   </section>
 </section>
+
+@if (isAddDriverModalOpen) {
+  <div class="modal-backdrop" (click)="onCloseAddDriverModal()"></div>
+  <section class="modal-shell" role="dialog" aria-modal="true" aria-label="Add driver dialog">
+    <article class="panel panel-pad modal-card" (click)="$event.stopPropagation()">
+      <div class="section-head">
+        <div>
+          <h3>Add Driver</h3>
+          <p>Register a new driver profile for dispatch assignment.</p>
+        </div>
+      </div>
+
+      <form class="modal-form" (ngSubmit)="onSubmitAddDriver()">
+        <label>
+          <span>Driver Name</span>
+          <input type="text" name="name" [(ngModel)]="driverForm.name" required />
+        </label>
+
+        <label>
+          <span>Zone</span>
+          <input type="text" name="zone" [(ngModel)]="driverForm.zone" required />
+        </label>
+
+        <label>
+          <span>Shift</span>
+          <select name="shift" [(ngModel)]="driverForm.shift" required>
+            <option value="Morning">Morning</option>
+            <option value="Evening">Evening</option>
+            <option value="Night">Night</option>
+          </select>
+        </label>
+
+        <label>
+          <span>License</span>
+          <input type="text" name="license" [(ngModel)]="driverForm.license" required />
+        </label>
+
+        <label>
+          <span>Status</span>
+          <select name="status" [(ngModel)]="driverForm.status" required>
+            <option value="Available">Available</option>
+            <option value="On Trip">On Trip</option>
+            <option value="Off Duty">Off Duty</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="onCloseAddDriverModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Saving...' : 'Save Driver' }}
+          </button>
+        </div>
+      </form>
+    </article>
+  </section>
+}

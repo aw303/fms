@@ -1,3 +1,6 @@
+@if (isLoginRoute) {
+  <router-outlet></router-outlet>
+} @else {
 <div class="app-shell">
   <aside class="side-panel">
     <div class="brand">
@@ -15,6 +18,8 @@
         <small>Enterprise workspace</small>
       </div>
     </div>
+
+    <button class="logout-cta" type="button" (click)="onLogout()">Logout</button>
 
     <nav class="menu">
       @for (item of navItems; track item.path) {
@@ -57,7 +62,7 @@
         </label>
         <button class="secondary-button" type="button" (click)="onExport()" [disabled]="!can('report:export')">Export</button>
         <button class="primary-button" type="button" (click)="onNewDispatch()" [disabled]="!can('dispatch:create')">New Dispatch</button>
-        <button class="avatar-button" type="button" aria-label="Open account menu" (click)="onOpenAccountMenu()" [disabled]="!can('action:log')">AW</button>
+        <button class="logout-topbar" type="button" (click)="onLogout()">Logout</button>
       </div>
     </header>
 
@@ -66,3 +71,4 @@
     </section>
   </main>
 </div>
+}

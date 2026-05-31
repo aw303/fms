@@ -97,7 +97,9 @@ export class DispatchesPageComponent implements OnInit {
       await this.loadDispatches();
       window.alert(`Dispatch ${result.code} created successfully.`);
     } catch {
-      window.alert('Could not create dispatch.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Could not create dispatch.');
+      }
     }
   }
 
@@ -120,7 +122,9 @@ export class DispatchesPageComponent implements OnInit {
       }));
       this.updateBoardLanes();
     } catch {
-      window.alert('Failed to load dispatches from backend.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to load dispatches from backend.');
+      }
     }
   }
 
@@ -129,7 +133,9 @@ export class DispatchesPageComponent implements OnInit {
       const result = await firstValueFrom(this.api.logAction(action, payload));
       window.alert(result.message);
     } catch {
-      window.alert('Action failed.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Action failed.');
+      }
     }
   }
 

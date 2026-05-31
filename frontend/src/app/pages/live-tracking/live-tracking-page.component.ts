@@ -52,7 +52,9 @@ export class LiveTrackingPageComponent {
       const result = await firstValueFrom(this.api.logAction('toggle-map-layer', { layer }));
       window.alert(result.message);
     } catch {
-      window.alert('Could not toggle map layer.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Could not toggle map layer.');
+      }
     }
   }
 
@@ -62,7 +64,9 @@ export class LiveTrackingPageComponent {
       this.routes = result.routes;
       window.alert(`Routes optimized. Projected delay reduction: ${result.projected_delay_reduction_minutes} minutes.`);
     } catch {
-      window.alert('Route optimization failed.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Route optimization failed.');
+      }
     }
   }
 }

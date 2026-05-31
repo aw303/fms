@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, of, switchMap, tap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { MonoTypeOperatorFunction, Observable, catchError, tap, throwError } from 'rxjs';
 
 export type DispatchStatus = 'Scheduled' | 'Loading' | 'Delayed' | 'Completed';
 export type CustomerRisk = 'Low' | 'Medium' | 'High';
@@ -97,37 +98,45 @@ export class FleetApiService {
   private accessToken: string | null = this.readStorage(this.tokenStorageKey);
   private permissionSet: Set<string> = new Set(this.readPermissions());
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router,
+  ) {}
 
-  ensureDemoSession(): Observable<AuthSessionDto> {
-    const restore$: Observable<AuthSessionDto | null> = this.accessToken ? this.me() : of(null);
-
-    return restore$.pipe(
-      catchError(() => of(null)),
-      switchMap((session) => {
-        if (session) {
-          return of(session);
-        }
-
-        return this.login('admin@fleet.local', 'admin123');
-      }),
+  login(email: string, password: string): Observable<AuthSessionDto> {
+    return this.http.post<AuthSessionDto>(`${this.apiBase}/auth/login`, { email, password }).pipe(
+      this.withAuthErrorHandling(),
+      tap((session) => this.storeSession(session)),
     );
   }
 
-  login(email: string, password: string): Observable<AuthSessionDto> {
-    return this.http
-      .post<AuthSessionDto>(`${this.apiBase}/auth/login`, { email, password })
-      .pipe(tap((session) => this.storeSession(session)));
+  me(): Observable<AuthSessionDto> {
+    return this.requestWithSession(() => this.http.get<AuthSessionDto>(`${this.apiBase}/auth/me`, this.authOptions()));
   }
 
-  me(): Observable<AuthSessionDto> {
-    return this.http
-      .get<AuthSessionDto>(`${this.apiBase}/auth/me`, this.authOptions())
-      .pipe(tap((session) => this.storeSession(session)));
+  isAuthenticated(): boolean {
+    return Boolean(this.accessToken);
   }
 
   hasPermission(permission: string): boolean {
     return this.permissionSet.has(permission);
+  }
+
+  storeSession(session: AuthSessionDto): void {
+    this.accessToken = session.access_token;
+    this.permissionSet = new Set(session.permissions);
+
+    this.writeStorage(this.tokenStorageKey, session.access_token);
+    this.writeStorage(this.permissionsStorageKey, JSON.stringify(session.permissions));
+  }
+
+  logout(options?: { redirectToLogin?: boolean }): void {
+    const redirect = options?.redirectToLogin ?? true;
+    this.clearSession();
+
+    if (redirect) {
+      this.router.navigateByUrl('/login');
+    }
   }
 
   listDispatches(): Observable<DispatchDto[]> {
@@ -165,31 +174,22 @@ export class FleetApiService {
   }
 
   private requestWithSession<T>(request: () => Observable<T>): Observable<T> {
-    const executeRequest = (): Observable<T> =>
-      request().pipe(
-        catchError((error: { status?: number }) => {
-          if (error?.status === 401) {
-            this.clearSession();
-            return this.ensureDemoSession().pipe(switchMap(() => request()));
-          }
-
-          return throwError(() => error);
-        }),
-      );
-
-    if (this.accessToken) {
-      return executeRequest();
+    if (!this.accessToken) {
+      this.logout();
+      return throwError(() => new Error('Unauthenticated'));
     }
 
-    return this.ensureDemoSession().pipe(switchMap(() => executeRequest()));
+    return request().pipe(this.withAuthErrorHandling());
   }
 
-  private storeSession(session: AuthSessionDto): void {
-    this.accessToken = session.access_token;
-    this.permissionSet = new Set(session.permissions);
+  private withAuthErrorHandling<T>(): MonoTypeOperatorFunction<T> {
+    return catchError((error: { status?: number }) => {
+      if (error?.status === 401 || error?.status === 403) {
+        this.logout();
+      }
 
-    this.writeStorage(this.tokenStorageKey, session.access_token);
-    this.writeStorage(this.permissionsStorageKey, JSON.stringify(session.permissions));
+      return throwError(() => error);
+    });
   }
 
   private authOptions(): { headers?: HttpHeaders } {
