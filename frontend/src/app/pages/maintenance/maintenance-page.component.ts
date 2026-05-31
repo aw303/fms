@@ -38,7 +38,9 @@ export class MaintenancePageComponent {
       const result = await firstValueFrom(this.api.logAction('create-work-order', { source: 'maintenance-work-orders' }));
       window.alert(result.message);
     } catch {
-      window.alert('Failed to run action.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to run action.');
+      }
     }
   }
 }

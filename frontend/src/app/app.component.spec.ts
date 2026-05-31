@@ -1,19 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
 import { AppComponent } from './app.component';
 import { FleetApiService } from './services/fleet-api.service';
 
-const fleetApiStub: Pick<FleetApiService, 'ensureDemoSession' | 'hasPermission'> = {
-  ensureDemoSession: () =>
-    of({
-      access_token: 'test-token',
-      token_type: 'bearer',
-      user: { id: 1, email: 'admin@fleet.local', full_name: 'Fleet Admin', status: 'active' },
-      roles: ['admin'],
-      permissions: ['report:export', 'dispatch:create', 'action:log'],
-    }),
+const fleetApiStub: Pick<FleetApiService, 'hasPermission' | 'logout'> = {
   hasPermission: () => true,
+  logout: () => undefined,
 };
 
 describe('AppComponent', () => {

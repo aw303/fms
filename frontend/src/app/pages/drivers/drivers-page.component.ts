@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { FleetApiService } from '../../services/fleet-api.service';
 
@@ -21,14 +22,22 @@ interface ShiftCoverage {
   coverage: number;
 }
 
+interface DriverFormModel {
+  name: string;
+  zone: string;
+  shift: 'Morning' | 'Evening' | 'Night';
+  license: string;
+  status: Driver['status'];
+}
+
 @Component({
   selector: 'app-drivers-page',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './drivers-page.component.html',
   styleUrl: './drivers-page.component.scss'
 })
 export class DriversPageComponent {
-  readonly drivers: Driver[] = [
+  drivers: Driver[] = [
     { name: 'Adeel Khan', shift: 'Morning', rating: '4.9', trips: 186, status: 'On Trip', license: 'HTV-2291', compliance: 'Valid', hours: '6h 20m', zone: 'North Hub' },
     { name: 'Sana Tariq', shift: 'Morning', rating: '4.8', trips: 144, status: 'Available', license: 'LTV-8142', compliance: 'Valid', hours: '2h 45m', zone: 'Airport Belt' },
     { name: 'Mubashir Ali', shift: 'Evening', rating: '4.7', trips: 203, status: 'On Trip', license: 'HTV-7712', compliance: 'Review', hours: '7h 50m', zone: 'Industrial East' },
@@ -42,18 +51,72 @@ export class DriversPageComponent {
     { label: 'Night', drivers: 22, coverage: 68 }
   ];
 
+  isAddDriverModalOpen = false;
+  isSubmitting = false;
+
+  driverForm: DriverFormModel = {
+    name: '',
+    zone: '',
+    shift: 'Morning',
+    license: '',
+    status: 'Available',
+  };
+
   constructor(private readonly api: FleetApiService) {}
 
   statusClass(status: Driver['status']): string {
     return status.toLowerCase().replace(/\s+/g, '-');
   }
 
-  async onAddDriver(): Promise<void> {
+  onAddDriver(): void {
+    this.driverForm = {
+      name: '',
+      zone: '',
+      shift: 'Morning',
+      license: '',
+      status: 'Available',
+    };
+    this.isAddDriverModalOpen = true;
+  }
+
+  onCloseAddDriverModal(): void {
+    this.isAddDriverModalOpen = false;
+    this.isSubmitting = false;
+  }
+
+  async onSubmitAddDriver(): Promise<void> {
+    if (!this.driverForm.name.trim() || !this.driverForm.zone.trim() || !this.driverForm.license.trim()) {
+      window.alert('Name, zone, and license are required.');
+      return;
+    }
+
+    this.isSubmitting = true;
+
     try {
-      const result = await firstValueFrom(this.api.logAction('add-driver', { source: 'drivers-directory' }));
-      window.alert(result.message);
+      await firstValueFrom(this.api.logAction('add-driver', { ...this.driverForm }));
+
+      this.drivers = [
+        {
+          name: this.driverForm.name.trim(),
+          zone: this.driverForm.zone.trim(),
+          shift: this.driverForm.shift,
+          license: this.driverForm.license.trim(),
+          status: this.driverForm.status,
+          rating: '5.0',
+          trips: 0,
+          compliance: 'Valid',
+          hours: '0h 00m',
+        },
+        ...this.drivers,
+      ];
+
+      this.onCloseAddDriverModal();
+      window.alert('Driver added successfully.');
     } catch {
-      window.alert('Failed to run action.');
+      this.isSubmitting = false;
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to add driver. You may not have permission.');
+      }
     }
   }
 }

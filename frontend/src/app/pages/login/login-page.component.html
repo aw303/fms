@@ -1,0 +1,33 @@
+<section class="login-wrap">
+  <article class="login-card panel">
+    <div class="login-head">
+      <p class="eyebrow">Fleet Pulse</p>
+      <h1>Sign In</h1>
+      <p>Use your workspace credentials to continue.</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="onSubmit()">
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" [(ngModel)]="email" required autocomplete="username" />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+      </label>
+
+      @if (error) {
+        <p class="error-text">{{ error }}</p>
+      }
+
+      <button class="primary-button" type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <div class="hint">
+      <small>Demo accounts: `admin@fleet.local / admin123` or `dispatcher@fleet.local / dispatch123`</small>
+    </div>
+  </article>
+</section>

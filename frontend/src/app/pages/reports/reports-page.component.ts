@@ -51,7 +51,9 @@ export class ReportsPageComponent {
       URL.revokeObjectURL(url);
       window.alert('Report downloaded successfully.');
     } catch {
-      window.alert('Failed to download report.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to download report.');
+      }
     }
   }
 }

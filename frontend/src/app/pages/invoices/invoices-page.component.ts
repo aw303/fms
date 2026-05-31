@@ -46,7 +46,9 @@ export class InvoicesPageComponent {
       const result = await firstValueFrom(this.api.logAction(action, payload));
       window.alert(result.message);
     } catch {
-      window.alert('Failed to run action.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to run action.');
+      }
     }
   }
 }

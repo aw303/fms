@@ -41,7 +41,9 @@ export class VehiclesPageComponent {
       const result = await firstValueFrom(this.api.logAction('add-vehicle', { source: 'vehicle-registry' }));
       window.alert(result.message);
     } catch {
-      window.alert('Failed to run action.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Failed to run action.');
+      }
     }
   }
 }

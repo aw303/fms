@@ -107,7 +107,9 @@ export class DashboardPageComponent {
       const result = await firstValueFrom(this.api.logAction(action, payload));
       window.alert(result.message);
     } catch {
-      window.alert('Action failed.');
+      if (this.api.isAuthenticated()) {
+        window.alert('Action failed.');
+      }
     }
   }
 }

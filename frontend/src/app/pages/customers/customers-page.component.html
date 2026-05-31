@@ -73,3 +73,69 @@
     </article>
   </section>
 </section>
+
+@if (isAddCustomerModalOpen) {
+  <div class="modal-backdrop" (click)="onCloseAddCustomerModal()"></div>
+  <section class="modal-shell" role="dialog" aria-modal="true" aria-label="Add customer dialog">
+    <article class="panel panel-pad modal-card" (click)="$event.stopPropagation()">
+      <div class="section-head">
+        <div>
+          <h3>Add Customer</h3>
+          <p>Create a new customer account with lane and SLA details.</p>
+        </div>
+      </div>
+
+      <form class="modal-form" (ngSubmit)="onSubmitAddCustomer()">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" [(ngModel)]="customerForm.name" required />
+        </label>
+
+        <label>
+          <span>Tier</span>
+          <select name="tier" [(ngModel)]="customerForm.tier" required>
+            <option value="Enterprise">Enterprise</option>
+            <option value="Growth">Growth</option>
+            <option value="Standard">Standard</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Owner</span>
+          <input type="text" name="owner" [(ngModel)]="customerForm.owner" required />
+        </label>
+
+        <label>
+          <span>Lanes</span>
+          <input type="number" name="lanes" [(ngModel)]="customerForm.lanes" min="0" required />
+        </label>
+
+        <label>
+          <span>Monthly Spend (USD)</span>
+          <input type="number" name="monthlySpend" [(ngModel)]="customerForm.monthlySpend" min="0" required />
+        </label>
+
+        <label>
+          <span>SLA (%)</span>
+          <input type="number" name="sla" [(ngModel)]="customerForm.sla" min="0" max="100" step="0.1" required />
+        </label>
+
+        <label>
+          <span>Risk</span>
+          <select name="risk" [(ngModel)]="customerForm.risk" required>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="onCloseAddCustomerModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Saving...' : 'Save Customer' }}
+          </button>
+        </div>
+      </form>
+    </article>
+  </section>
+}
