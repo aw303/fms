@@ -1,0 +1,28 @@
+<section class="reports-grid">
+  <article class="metric-cards">
+    @for (metric of metrics; track metric.name) {
+      <div class="metric">
+        <p class="name">{{ metric.name }}</p>
+        <h3>{{ metric.value }}</h3>
+        <p class="delta">{{ metric.delta }} vs last week</p>
+      </div>
+    }
+  </article>
+
+  <article class="chart-card">
+    <div class="head">
+      <h3>Weekly Throughput</h3>
+      <span>Mon → Sun</span>
+    </div>
+
+    <div class="bars">
+      <div class="bar" style="--h:58%"><span>Mon</span></div>
+      <div class="bar" style="--h:72%"><span>Tue</span></div>
+      <div class="bar" style="--h:64%"><span>Wed</span></div>
+      <div class="bar" style="--h:81%"><span>Thu</span></div>
+      <div class="bar" style="--h:76%"><span>Fri</span></div>
+      <div class="bar" style="--h:52%"><span>Sat</span></div>
+      <div class="bar" style="--h:67%"><span>Sun</span></div>
+    </div>
+  </article>
+</section>

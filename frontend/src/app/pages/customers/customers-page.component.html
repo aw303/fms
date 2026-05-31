@@ -1,0 +1,75 @@
+<section class="page-stack">
+  <div class="metric-grid">
+    <article class="panel panel-pad">
+      <p class="metric-label">Active Customers</p>
+      <p class="metric-value">42</p>
+      <p class="metric-note">8 enterprise accounts</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Contracted Lanes</p>
+      <p class="metric-value">126</p>
+      <p class="metric-note">Across 4 hubs</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">At-risk SLA</p>
+      <p class="metric-value">3</p>
+      <p class="metric-note">Needs account review</p>
+    </article>
+  </div>
+
+  <section class="customer-grid">
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Customer Accounts</h3>
+          <p>Contracts, lanes, service levels, and account ownership.</p>
+        </div>
+        <button class="primary-button" type="button">Add Customer</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Tier</th>
+              <th>Lanes</th>
+              <th>Monthly Spend</th>
+              <th>SLA</th>
+              <th>Owner</th>
+              <th>Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (customer of customers; track customer.name) {
+              <tr>
+                <td><strong>{{ customer.name }}</strong></td>
+                <td>{{ customer.tier }}</td>
+                <td>{{ customer.lanes }}</td>
+                <td>{{ customer.monthlySpend }}</td>
+                <td>{{ customer.sla }}</td>
+                <td>{{ customer.owner }}</td>
+                <td><span class="status-chip" [ngClass]="riskClass(customer.status)">{{ customer.status }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Contract Health</h3>
+          <p>Renewals and service commitments.</p>
+        </div>
+      </div>
+      <div class="contract-list">
+        <div><strong>Renewals in 30 days</strong><span>6 accounts</span></div>
+        <div><strong>Dedicated vehicles</strong><span>28 assigned</span></div>
+        <div><strong>Premium SLA lanes</strong><span>34 lanes</span></div>
+        <div><strong>Open support cases</strong><span>11 cases</span></div>
+      </div>
+    </article>
+  </section>
+</section>

@@ -1,0 +1,80 @@
+<section class="page-stack">
+  <div class="vehicle-stats">
+    <article class="panel panel-pad">
+      <p class="metric-label">Total Assets</p>
+      <p class="metric-value">184</p>
+      <p class="metric-note">Trucks, vans, reefers, trailers</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">In Service</p>
+      <p class="metric-value">171</p>
+      <p class="metric-note">93% availability</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Service Due</p>
+      <p class="metric-value">13</p>
+      <p class="metric-note">5 critical this week</p>
+    </article>
+  </div>
+
+  <section class="vehicle-grid">
+    <article class="panel panel-pad fleet-health">
+      <div class="section-head">
+        <div>
+          <h3>Fleet Health Mix</h3>
+          <p>Maintenance readiness by vehicle state.</p>
+        </div>
+      </div>
+      <div class="rings">
+        <div class="ring excellent"><span>74%</span><small>Excellent</small></div>
+        <div class="ring good"><span>19%</span><small>Good</small></div>
+        <div class="ring service"><span>07%</span><small>Due</small></div>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Vehicle Registry</h3>
+          <p>Asset health, hub placement, and utilization.</p>
+        </div>
+        <button class="primary-button" type="button">Add Vehicle</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>Hub</th>
+              <th>Odometer</th>
+              <th>Fuel</th>
+              <th>Utilization</th>
+              <th>Next Service</th>
+              <th>Health</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (vehicle of vehicles; track vehicle.id) {
+              <tr>
+                <td>
+                  <strong>{{ vehicle.id }}</strong>
+                  <small>{{ vehicle.type }} · {{ vehicle.mileage }} this month</small>
+                </td>
+                <td>{{ vehicle.hub }}</td>
+                <td>{{ vehicle.odometer }}</td>
+                <td>{{ vehicle.fuel }}</td>
+                <td>
+                  <div class="bar-wrap"><span [style.width.%]="vehicle.utilization"></span></div>
+                  <small>{{ vehicle.utilization }}%</small>
+                </td>
+                <td>{{ vehicle.nextService }}</td>
+                <td><span class="status-chip" [ngClass]="healthClass(vehicle.health)">{{ vehicle.health }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+</section>

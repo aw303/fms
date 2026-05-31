@@ -1,0 +1,66 @@
+<section class="page-stack">
+  <div class="numbers">
+    <article class="panel panel-pad">
+      <p class="metric-label">Receivable</p>
+      <p class="metric-value">$78.6K</p>
+      <p class="metric-note">Invoices awaiting payment</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Collected</p>
+      <p class="metric-value">$41.2K</p>
+      <p class="metric-note">This billing cycle</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Overdue</p>
+      <p class="metric-value">$7.9K</p>
+      <p class="metric-note">3 accounts over terms</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Unbilled Trips</p>
+      <p class="metric-value">36</p>
+      <p class="metric-note">Ready for invoice draft</p>
+    </article>
+  </div>
+
+  <article class="panel">
+    <div class="section-head panel-pad">
+      <div>
+        <h3>Recent Invoices</h3>
+        <p>Billing status tied back to trips and account owners.</p>
+      </div>
+      <div class="toolbar">
+        <button class="secondary-button" type="button">Sync Finance</button>
+        <button class="primary-button" type="button">Create Invoice</button>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Client</th>
+            <th>Trips</th>
+            <th>Amount</th>
+            <th>Owner</th>
+            <th>Due</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (invoice of invoices; track invoice.ref) {
+            <tr>
+              <td><strong>{{ invoice.ref }}</strong></td>
+              <td>{{ invoice.client }}</td>
+              <td>{{ invoice.trips }}</td>
+              <td>{{ invoice.amount }}</td>
+              <td>{{ invoice.owner }}</td>
+              <td>{{ invoice.due }}</td>
+              <td><span class="status-chip" [ngClass]="statusClass(invoice.status)">{{ invoice.status }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

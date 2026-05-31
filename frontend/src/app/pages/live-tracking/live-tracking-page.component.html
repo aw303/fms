@@ -1,0 +1,109 @@
+<section class="page-stack">
+  <div class="tracking-metrics">
+    <article class="panel panel-pad">
+      <p class="metric-label">Vehicles Online</p>
+      <p class="metric-value">176</p>
+      <p class="metric-note">95.6% telemetry coverage</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Late Risk</p>
+      <p class="metric-value">9</p>
+      <p class="metric-note">4 high-priority routes</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Avg ETA Drift</p>
+      <p class="metric-value">7m</p>
+      <p class="metric-note">Across active trips</p>
+    </article>
+  </div>
+
+  <section class="track-grid">
+    <article class="panel panel-pad map-card">
+      <div class="section-head">
+        <div>
+          <h3>Live Fleet Map</h3>
+          <p>Route state, position, and exception density.</p>
+        </div>
+        <div class="map-actions">
+          <button class="secondary-button" type="button">Traffic</button>
+          <button class="secondary-button" type="button">Weather</button>
+          <button class="secondary-button" type="button">Hubs</button>
+        </div>
+      </div>
+
+      <div class="map-surface">
+        <div class="grid"></div>
+        <div class="route a"></div>
+        <div class="route b"></div>
+        <div class="route c"></div>
+        <div class="hotspot h1"><span>TRK-219</span></div>
+        <div class="hotspot h2 risk"><span>TRK-118</span></div>
+        <div class="hotspot h3"><span>VAN-302</span></div>
+        <div class="hub hub-a">LHR</div>
+        <div class="hub hub-b">KHI</div>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Tracking Alerts</h3>
+          <p>Signals requiring dispatch review.</p>
+        </div>
+      </div>
+
+      <div class="alert-list">
+        @for (alert of alerts; track alert.vehicle) {
+          <div class="alert-item">
+            <span class="status-chip" [ngClass]="riskClass(alert.severity)">{{ alert.vehicle }}</span>
+            <p>{{ alert.message }}</p>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <article class="panel">
+    <div class="section-head panel-pad">
+      <div>
+        <h3>Active Routes</h3>
+        <p>Operational trip view for dispatch coordinators.</p>
+      </div>
+      <button class="primary-button" type="button">Optimize Routes</button>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Route</th>
+            <th>Vehicle</th>
+            <th>Driver</th>
+            <th>Lane</th>
+            <th>Progress</th>
+            <th>ETA</th>
+            <th>Temp</th>
+            <th>Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (route of routes; track route.id) {
+            <tr>
+              <td><strong>{{ route.id }}</strong></td>
+              <td>{{ route.vehicle }}</td>
+              <td>{{ route.driver }}</td>
+              <td><small>{{ route.origin }} to {{ route.destination }}</small></td>
+              <td>
+                <div class="bar-wrap"><span [style.width.%]="route.progress"></span></div>
+                <small>{{ route.progress }}%</small>
+              </td>
+              <td>{{ route.eta }}</td>
+              <td>{{ route.temperature }}</td>
+              <td><span class="status-chip" [ngClass]="riskClass(route.risk)">{{ route.risk }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

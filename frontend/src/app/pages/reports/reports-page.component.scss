@@ -1,0 +1,85 @@
+.reports-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.metric-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.metric,
+.chart-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(17, 24, 37, 0.95), rgba(11, 16, 24, 0.92));
+  padding: 0.85rem;
+}
+
+.name,
+.delta,
+.metric h3,
+.head h3,
+.head span {
+  margin: 0;
+}
+
+.name,
+.delta,
+.head span {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.metric h3 {
+  margin-top: 0.35rem;
+  font-size: 1.45rem;
+}
+
+.delta {
+  margin-top: 0.3rem;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bars {
+  margin-top: 0.9rem;
+  min-height: 220px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.65rem;
+  align-items: end;
+}
+
+.bar {
+  height: var(--h);
+  border-radius: 10px 10px 6px 6px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  position: relative;
+}
+
+.bar span {
+  position: absolute;
+  bottom: -1.45rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+@media (max-width: 980px) {
+  .metric-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .metric-cards {
+    grid-template-columns: 1fr;
+  }
+}

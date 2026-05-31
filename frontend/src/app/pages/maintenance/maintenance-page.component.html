@@ -1,0 +1,75 @@
+<section class="page-stack">
+  <div class="metric-grid">
+    <article class="panel panel-pad">
+      <p class="metric-label">Open Work Orders</p>
+      <p class="metric-value">18</p>
+      <p class="metric-note">5 due today</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Fleet Downtime</p>
+      <p class="metric-value">3.8%</p>
+      <p class="metric-note">Below 5% target</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Monthly Spend</p>
+      <p class="metric-value">$12.4K</p>
+      <p class="metric-note">Parts and labor</p>
+    </article>
+  </div>
+
+  <section class="maintenance-grid">
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Work Orders</h3>
+          <p>Preventive service, inspection, and repair queue.</p>
+        </div>
+        <button class="primary-button" type="button">Create Work Order</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Vehicle</th>
+              <th>Issue</th>
+              <th>Bay</th>
+              <th>Due</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of workOrders; track order.id) {
+              <tr>
+                <td><strong>{{ order.id }}</strong></td>
+                <td>{{ order.vehicle }}</td>
+                <td>{{ order.issue }}</td>
+                <td>{{ order.bay }}</td>
+                <td>{{ order.due }}</td>
+                <td>{{ order.cost }}</td>
+                <td><span class="status-chip" [ngClass]="statusClass(order.status)">{{ order.status }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Bay Schedule</h3>
+          <p>Technician loading for the next shift.</p>
+        </div>
+      </div>
+      <div class="bay-list">
+        <div><strong>Bay 1</strong><span>2 jobs · 72%</span></div>
+        <div><strong>Bay 2</strong><span>Critical · 91%</span></div>
+        <div><strong>Bay 3</strong><span>1 job · 38%</span></div>
+        <div><strong>Bay 4</strong><span>Calibration · 63%</span></div>
+      </div>
+    </article>
+  </section>
+</section>

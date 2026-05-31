@@ -1,0 +1,94 @@
+<section class="page-stack">
+  <div class="stat-strip">
+    <article class="panel panel-pad">
+      <p class="metric-label">Available</p>
+      <p class="metric-value">42</p>
+      <p class="metric-note">Can be assigned now</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">On Trip</p>
+      <p class="metric-value">67</p>
+      <p class="metric-note">Across 31 lanes</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Compliance Holds</p>
+      <p class="metric-value">3</p>
+      <p class="metric-note">Docs or hours review</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Avg Rating</p>
+      <p class="metric-value">4.8</p>
+      <p class="metric-note">Last 30 days</p>
+    </article>
+  </div>
+
+  <section class="driver-layout">
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Driver Directory</h3>
+          <p>Roster, licensing, shift coverage, and availability.</p>
+        </div>
+        <button class="primary-button" type="button">Add Driver</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Driver</th>
+              <th>Zone</th>
+              <th>Shift</th>
+              <th>License</th>
+              <th>Hours</th>
+              <th>Trips</th>
+              <th>Rating</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (driver of drivers; track driver.name) {
+              <tr>
+                <td>
+                  <strong>{{ driver.name }}</strong>
+                  <small>{{ driver.compliance }} compliance</small>
+                </td>
+                <td>{{ driver.zone }}</td>
+                <td>{{ driver.shift }}</td>
+                <td>{{ driver.license }}</td>
+                <td>{{ driver.hours }}</td>
+                <td>{{ driver.trips }}</td>
+                <td>{{ driver.rating }}</td>
+                <td><span class="status-chip" [ngClass]="statusClass(driver.status)">{{ driver.status }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Shift Coverage</h3>
+          <p>Capacity compared with planned dispatches.</p>
+        </div>
+      </div>
+
+      <div class="coverage-list">
+        @for (item of coverage; track item.label) {
+          <div class="coverage-item">
+            <div>
+              <strong>{{ item.label }}</strong>
+              <small>{{ item.drivers }} drivers</small>
+            </div>
+            <div class="coverage-bar">
+              <span [style.width.%]="item.coverage"></span>
+            </div>
+            <span>{{ item.coverage }}%</span>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+</section>

@@ -1,0 +1,90 @@
+<section class="page-stack">
+  <div class="metric-grid">
+    <article class="panel panel-pad">
+      <p class="metric-label">Open Dispatches</p>
+      <p class="metric-value">108</p>
+      <p class="metric-note">12 require planner review</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Load Fill Rate</p>
+      <p class="metric-value">88%</p>
+      <p class="metric-note">Target is 84%</p>
+    </article>
+    <article class="panel panel-pad">
+      <p class="metric-label">Same-day Capacity</p>
+      <p class="metric-value">24</p>
+      <p class="metric-note">Vehicles available now</p>
+    </article>
+  </div>
+
+  <article class="panel panel-pad">
+    <div class="section-head">
+      <div>
+        <h3>Dispatch Board</h3>
+        <p>Planning pipeline from order intake to delivery execution.</p>
+      </div>
+      <div class="toolbar">
+        <button class="secondary-button" type="button">Import Orders</button>
+        <button class="primary-button" type="button">Create Dispatch</button>
+      </div>
+    </div>
+
+    <div class="board">
+      @for (lane of lanes; track lane.title) {
+        <section class="board-lane">
+          <div class="lane-head">
+            <strong>{{ lane.title }}</strong>
+            <span class="chip">{{ lane.count }}</span>
+          </div>
+          @for (order of lane.orders; track order) {
+            <div class="order-card">
+              <strong>{{ order }}</strong>
+              <small>Owner assigned · SLA monitored</small>
+            </div>
+          }
+        </section>
+      }
+    </div>
+  </article>
+
+  <article class="panel">
+    <div class="section-head panel-pad">
+      <div>
+        <h3>Today&apos;s Dispatches</h3>
+        <p>Operational schedule with assigned vehicle and planner.</p>
+      </div>
+      <button class="secondary-button" type="button">Filter</button>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Dispatch</th>
+            <th>Customer</th>
+            <th>Pickup</th>
+            <th>Dropoff</th>
+            <th>Vehicle</th>
+            <th>Planner</th>
+            <th>Window</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders; track order.id) {
+            <tr>
+              <td><strong>{{ order.id }}</strong></td>
+              <td>{{ order.customer }}</td>
+              <td>{{ order.pickup }}</td>
+              <td>{{ order.dropoff }}</td>
+              <td>{{ order.vehicle }}</td>
+              <td>{{ order.planner }}</td>
+              <td>{{ order.window }}</td>
+              <td><span class="status-chip" [ngClass]="statusClass(order.status)">{{ order.status }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

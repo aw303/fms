@@ -1,1 +1,249 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg: #eef3f8;
+  --surface: #ffffff;
+  --surface-2: #f7fafc;
+  --panel: #ffffff;
+  --line: #d8e0ea;
+  --line-strong: #bfccd9;
+  --text: #15202e;
+  --muted: #66758a;
+  --muted-strong: #435066;
+  --accent: #087f6f;
+  --accent-2: #1b67b1;
+  --warning: #b7791f;
+  --danger: #c2414b;
+  --success: #18825f;
+  --shadow: 0 16px 34px rgba(28, 45, 66, 0.09);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Aptos', 'Avenir Next', 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #f8fbfd 0%, var(--bg) 42%, #e8eef5 100%);
+  font-size: 15px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Aptos Display', 'Avenir Next', 'Segoe UI', sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+.page-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.panel-pad {
+  padding: 1rem;
+}
+
+.section-head,
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.section-head h3,
+.section-head p,
+.metric-label,
+.metric-value,
+.metric-note {
+  margin: 0;
+}
+
+.section-head p,
+.muted,
+.metric-label,
+.metric-note {
+  color: var(--muted);
+}
+
+.metric-value {
+  margin-top: 0.35rem;
+  font-size: 1.55rem;
+  font-weight: 760;
+}
+
+.chip,
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--muted-strong);
+  padding: 0.18rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip.success,
+.status-chip.success,
+.status-chip.available,
+.status-chip.paid,
+.status-chip.excellent,
+.status-chip.low,
+.status-chip.completed {
+  color: var(--success);
+  border-color: rgba(24, 130, 95, 0.24);
+  background: rgba(24, 130, 95, 0.08);
+}
+
+.chip.warning,
+.status-chip.warning,
+.status-chip.loading,
+.status-chip.pending,
+.status-chip.good,
+.status-chip.medium,
+.status-chip.scheduled,
+.status-chip.on-trip {
+  color: var(--warning);
+  border-color: rgba(183, 121, 31, 0.25);
+  background: rgba(183, 121, 31, 0.09);
+}
+
+.chip.danger,
+.status-chip.danger,
+.status-chip.delayed,
+.status-chip.overdue,
+.status-chip.service-due,
+.status-chip.high,
+.status-chip.critical {
+  color: var(--danger);
+  border-color: rgba(194, 65, 75, 0.25);
+  background: rgba(194, 65, 75, 0.08);
+}
+
+.status-chip.neutral,
+.status-chip.off-duty {
+  color: var(--muted-strong);
+  border-color: var(--line);
+  background: var(--surface-2);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.76rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.data-table th {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: var(--surface-2);
+}
+
+.data-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table strong {
+  display: block;
+  font-weight: 760;
+}
+
+.data-table small {
+  color: var(--muted);
+}
+
+.icon-button,
+.primary-button,
+.secondary-button {
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  min-height: 38px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.icon-button {
+  width: 38px;
+  display: grid;
+  place-items: center;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0.8rem;
+  font-weight: 760;
+}
+
+.primary-button {
+  border-color: #076f61;
+  background: var(--accent);
+  color: white;
+}
+
+.secondary-button:hover,
+.icon-button:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-2);
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 760px) {
+  .section-head,
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .data-table {
+    min-width: 720px;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+}

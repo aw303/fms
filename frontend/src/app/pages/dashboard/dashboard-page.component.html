@@ -1,0 +1,144 @@
+<section class="page-stack">
+  <div class="kpi-grid">
+    @for (card of kpis; track card.label) {
+      <article class="panel panel-pad kpi-card">
+        <p class="metric-label">{{ card.label }}</p>
+        <div class="kpi-line">
+          <p class="metric-value">{{ card.value }}</p>
+          <span class="chip" [class.success]="card.trendUp" [class.danger]="!card.trendUp">{{ card.trend }}</span>
+        </div>
+        <p class="metric-note">{{ card.note }}</p>
+      </article>
+    }
+  </div>
+
+  <section class="ops-grid">
+    <article class="panel panel-pad route-panel">
+      <div class="section-head">
+        <div>
+          <h3>Network Control</h3>
+          <p>Active trips, hub pressure, and route exceptions.</p>
+        </div>
+        <span class="status-chip success">Live</span>
+      </div>
+
+      <div class="map-surface" aria-label="Fleet route activity">
+        <div class="map-grid"></div>
+        <div class="corridor c1"></div>
+        <div class="corridor c2"></div>
+        <div class="corridor c3"></div>
+        <div class="node n1"><span>LHR</span></div>
+        <div class="node n2"><span>KHI</span></div>
+        <div class="node n3"><span>ISB</span></div>
+        <div class="node n4"><span>MLT</span></div>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Driver Watchlist</h3>
+          <p>Crews nearest to SLA risk.</p>
+        </div>
+        <button class="secondary-button" type="button">Assign</button>
+      </div>
+
+      <div class="watch-list">
+        @for (driver of driverStatus; track driver.name) {
+          <div class="watch-item">
+            <div>
+              <strong>{{ driver.name }}</strong>
+              <small>{{ driver.vehicle }} · {{ driver.zone }}</small>
+            </div>
+            <div class="watch-meta">
+              <span>ETA {{ driver.eta }}</span>
+              <span class="status-chip" [ngClass]="statusClass(driver.state)">{{ driver.state }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="lower-grid">
+    <article class="panel">
+      <div class="section-head panel-pad">
+        <div>
+          <h3>Dispatch Queue</h3>
+          <p>Priority loads waiting on planning or approval.</p>
+        </div>
+        <button class="primary-button" type="button">Plan Loads</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Customer</th>
+              <th>Lane</th>
+              <th>Owner</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of workQueue; track item.ref) {
+              <tr>
+                <td><strong>{{ item.ref }}</strong></td>
+                <td>{{ item.account }}</td>
+                <td>{{ item.lane }}</td>
+                <td>{{ item.owner }}</td>
+                <td><span class="status-chip" [ngClass]="priorityClass(item.priority)">{{ item.priority }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Hub Capacity</h3>
+          <p>Dock pressure by operating location.</p>
+        </div>
+      </div>
+
+      <div class="capacity-list">
+        @for (hub of hubCapacity; track hub.hub) {
+          <div class="capacity-item">
+            <div class="capacity-label">
+              <strong>{{ hub.hub }}</strong>
+              <span>{{ hub.docked }}/{{ hub.capacity }}</span>
+            </div>
+            <div class="capacity-bar">
+              <span [style.width.%]="capacityPercent(hub)"></span>
+            </div>
+            <small>{{ hub.dwell }}</small>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="panel panel-pad">
+      <div class="section-head">
+        <div>
+          <h3>Exceptions</h3>
+          <p>Items that need an operator decision.</p>
+        </div>
+      </div>
+
+      <div class="exception-list">
+        @for (item of exceptions; track item.title) {
+          <div class="exception-item">
+            <span class="status-chip" [ngClass]="item.severity">{{ item.severity }}</span>
+            <div>
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.detail }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+</section>
